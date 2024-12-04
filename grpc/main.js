@@ -1,6 +1,7 @@
 import grpc from '@grpc/grpc-js';
 import protoLoader from '@grpc/proto-loader';
 import fs from 'fs';
+import config from '../config';
 
 // Load the .proto file
 const PROTO_PATH = 'grpc/calculator.proto';
@@ -62,9 +63,8 @@ if (calculatorProto && calculatorProto.service) {
 }
 
 // Bind the gRPC server to a port
-const GRPC_PORT = '50051';
-grpcServer.bindAsync(`0.0.0.0:${GRPC_PORT}`, grpc.ServerCredentials.createInsecure(), () => {
-  console.log(`gRPC server running at http://localhost:${GRPC_PORT}`);
+grpcServer.bindAsync(`0.0.0.0:${config.GRPC_PORT}`, grpc.ServerCredentials.createInsecure(), () => {
+  console.log(`gRPC server running at http://localhost:${config.GRPC_PORT}`);
   grpcServer.start();
 });
 

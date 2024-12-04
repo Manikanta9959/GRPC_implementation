@@ -1,4 +1,5 @@
 import express from 'express';
+import config from '../config';
 
 // Create an Express application
 const app = express();
@@ -57,6 +58,6 @@ app.post('/calculator/divide', (req, res) => {
 });
 
 // Start the Express server
-app.listen(API_PORT, () => {
-  console.log(`Express server running at http://localhost:${API_PORT}`);
+app.listen(config.API_PORT, () => {
+  console.log(`Express server running at http://localhost:${config.API_PORT}`);
 });
