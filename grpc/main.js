@@ -4,7 +4,7 @@ import fs from 'fs';
 import config from '../config.js';
 
 // Load the .proto file
-const PROTO_PATH = 'grpc/calculator.proto';
+const PROTO_PATH = 'calculator.proto';
 console.log(`PROTO_PATH: ${PROTO_PATH}`);  // Debugging: Check the resolved path
 
 // Ensure that the path is correct
@@ -23,34 +23,46 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 
 // Load the package definition into gRPC
 const calculatorProto = grpc.loadPackageDefinition(packageDefinition).Calculator;
-
+console.log(calculatorProto)
 // gRPC implementation of the calculator methods
 const calculator = {
-  Add: (call, callback) => {
-    const { num1, num2 } = call.request;
-    callback(null, { result: num1 + num2 });
-  },
-  Subtract: (call, callback) => {
-    const { num1, num2 } = call.request;
-    callback(null, { result: num1 - num2 });
-  },
-  Multiply: (call, callback) => {
-    const { num1, num2 } = call.request;
-    callback(null, { result: num1 * num2 });
-  },
-  Divide: (call, callback) => {
-    const { num1, num2 } = call.request;
-    if (num2 === 0) {
-      callback({
-        code: grpc.status.INVALID_ARGUMENT,
-        details: 'Division by zero is not allowed',
-      });
-    } else {
-      callback(null, { result: num1 / num2 });
-    }
-  },
-};
-
+    Add: (call, callback) => {
+      const { num1, num2 } = call.request;
+      const result = num1 + num2;
+      console.log(`Add - num1: ${num1}, num2: ${num2}, result: ${result}`);
+      callback(null, { result });
+    },
+    
+    Subtract: (call, callback) => {
+      const { num1, num2 } = call.request;
+      const result = num1 - num2;
+      console.log(`Subtract - num1: ${num1}, num2: ${num2}, result: ${result}`);
+      callback(null, { result });
+    },
+    
+    Multiply: (call, callback) => {
+      const { num1, num2 } = call.request;
+      const result = num1 * num2;
+      console.log(`Multiply - num1: ${num1}, num2: ${num2}, result: ${result}`);
+      callback(null, { result });
+    },
+    
+    Divide: (call, callback) => {
+      const { num1, num2 } = call.request;
+      if (num2 === 0) {
+        console.error(`Divide - num1: ${num1}, num2: ${num2} - Division by zero error`);
+        callback({
+          code: grpc.status.INVALID_ARGUMENT,
+          details: 'Division by zero is not allowed',
+        });
+      } else {
+        const result = num1 / num2;
+        console.log(`Divide - num1: ${num1}, num2: ${num2}, result: ${result}`);
+        callback(null, { result });
+      }
+    },
+  };
+  
 // Create a gRPC server and add the service
 const grpcServer = new grpc.Server();
 
