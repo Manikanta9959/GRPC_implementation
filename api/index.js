@@ -1,17 +1,38 @@
 import express from 'express';
 import config from '../config.js';
+import grpc from '@grpc/grpc-js';
+import protoLoader from '@grpc/proto-loader';
 import swagger from "../swagger.js";
+import bodyParser from 'body-parser';
+
+
+// Define the path to the .proto file
+const PROTO_PATH = 'api/calculator.proto';
+
+// Load the .proto file
+const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+  keepCase: true,
+  longs: String,
+  enums: String,
+  defaults: true,
+});
+
+// Load the gRPC package and define the Calculator service
+const calculatorProto = grpc.loadPackageDefinition(packageDefinition).calculator;
+
 
 // Create an Express application
 const app = express();
 
 app.use(express.json()); // To parse JSON bodies
+app.use(bodyParser.json());
 swagger(app);
+
 
 // Express route to interact with the calculator via HTTP
 app.post('/calculator/add', (req, res) => {
   const { num1, num2 } = req.body;
-  const client = new calculatorProto.Calculator('localhost:50051', grpc.credentials.createInsecure());
+  const client = new calculatorProto.Calculator(`localhost:${config.GRPC_PORT}`, grpc.credentials.createInsecure());
   client.Add({ num1, num2 }, (error, response) => {
     if (error) {
       res.status(500).send({ error: error.message });
@@ -24,7 +45,7 @@ app.post('/calculator/add', (req, res) => {
 
 app.post('/calculator/sub', (req, res) => {
   const { num1, num2 } = req.body;
-  const client = new calculatorProto.Calculator('localhost:50051', grpc.credentials.createInsecure());
+  const client = new calculatorProto.Calculator(`localhost:${config.GRPC_PORT}`, grpc.credentials.createInsecure());
   client.Subtract({ num1, num2 }, (error, response) => {
     if (error) {
       res.status(500).send({ error: error.message });
@@ -37,7 +58,7 @@ app.post('/calculator/sub', (req, res) => {
 
 app.post('/calculator/multiply', (req, res) => {
   const { num1, num2 } = req.body;
-  const client = new calculatorProto.Calculator('localhost:50051', grpc.credentials.createInsecure());
+  const client = new calculatorProto.Calculator(`localhost:${config.GRPC_PORT}`, grpc.credentials.createInsecure());
   client.Multiply({ num1, num2 }, (error, response) => {
     if (error) {
       res.status(500).send({ error: error.message });
@@ -50,7 +71,7 @@ app.post('/calculator/multiply', (req, res) => {
 
 app.post('/calculator/divide', (req, res) => {
   const { num1, num2 } = req.body;
-  const client = new calculatorProto.Calculator('localhost:50051', grpc.credentials.createInsecure());
+  const client = new calculatorProto.Calculator(`localhost:${config.GRPC_PORT}`, grpc.credentials.createInsecure());
   client.Divide({ num1, num2 }, (error, response) => {
     if (error) {
       res.status(500).send({ error: error.message });
