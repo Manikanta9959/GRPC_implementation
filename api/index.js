@@ -1,5 +1,5 @@
 import express from 'express';
-import config from '../config';
+import config from '../config.js';
 
 // Create an Express application
 const app = express();

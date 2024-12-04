@@ -1,7 +1,7 @@
 import grpc from '@grpc/grpc-js';
 import protoLoader from '@grpc/proto-loader';
 import fs from 'fs';
-import config from '../config';
+import config from '../config.js';
 
 // Load the .proto file
 const PROTO_PATH = 'grpc/calculator.proto';
