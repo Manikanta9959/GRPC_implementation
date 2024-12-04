@@ -1,9 +1,12 @@
 import express from 'express';
 import config from '../config.js';
+import swagger from "../swagger.js";
 
 // Create an Express application
 const app = express();
+
 app.use(express.json()); // To parse JSON bodies
+swagger(app);
 
 // Express route to interact with the calculator via HTTP
 app.post('/calculator/add', (req, res) => {
